@@ -14,7 +14,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     @IBOutlet weak var bitCoinLabel: UILabel!
     @IBOutlet weak var currencyLabel: UILabel!
     @IBOutlet weak var currencyPicker: UIPickerView!
-    let coinManager = CoinManager()
+    var coinManager = CoinManager()
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -38,8 +38,25 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         // Do any additional setup after loading the view.
         currencyPicker.dataSource = self
         currencyPicker.delegate = self
+        coinManager.delegate = self
+        
     }
     
 
 }
 
+extension ViewController:CoinManagerDelegate{
+    func updateCurrencyPriceLabels(currency: String, rate: Double?) {
+        DispatchQueue.main.async {
+            self.bitCoinLabel.text = String(format: "%.1f", rate!)
+            self.currencyLabel.text = currency
+            
+        }
+
+    }
+    
+    func errorWhenApiFails(error: Error) {
+        print(error)
+    }
+        
+}
